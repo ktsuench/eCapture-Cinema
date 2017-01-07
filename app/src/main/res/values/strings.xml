@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ProjectPowerade</string>
+
+    <string name="title">Welcome to Project Powerade!!!</string>
+    <string name="welcomemsg">This app helps solve the age old problem of deciding what movie to watch.
+        We use a bunch of API\'s and your reactions to determine which movie you should watch.</string>
+
+
 </resources>
