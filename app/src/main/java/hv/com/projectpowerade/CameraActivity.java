@@ -98,7 +98,7 @@ public class CameraActivity extends AppCompatActivity {
     Button next;
     static int i = 0;
 
-    final int MAX = 6;
+    final int MAX = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
