@@ -75,7 +75,7 @@ public class CameraActivity extends AppCompatActivity {
     ImageView poster1;
     TextView movtitle;
     Button next;
-    int i = 1;
+    static int i = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
