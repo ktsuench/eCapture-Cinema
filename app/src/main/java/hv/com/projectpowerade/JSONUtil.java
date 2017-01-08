@@ -1,3 +1,5 @@
+package hv.com.projectpowerade;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,14 +20,12 @@ public class JSONUtil {
                     JSONObject genre = new JSONObject();
                     genre.put("name", g.getName());
                     genre.put("id", g.getId());
-                    genre.put("fileName", g.getFileName());
                     if(g.getSubCategories() != null){
                         JSONArray subCategories = new JSONArray();
                         for(Genre subG : g.getSubCategories()){
                             JSONObject genreSub = new JSONObject();
                             genre.put("name", subG.getName());
                             genre.put("id", subG.getId());
-                            genre.put("fileName", subG.getFileName());
                             subCategories.put(genreSub);
                         }
                         genre.put("subCategories", subCategories);
