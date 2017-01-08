@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="backg">#0f43e0</color>
     <color name="text">#FFFFFF</color>
+    <color name="backg2">#0cd610</color>
+    <color name="text2">#000000</color>
+    <color name="buttons2">#00c3ff</color>
+
 </resources>

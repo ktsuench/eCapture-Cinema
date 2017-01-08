@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backg2"
+    >
 
     <TextView
-        android:text="YOU MADE IT YAY"
+        android:text="Movie title goes here"
+        android:textColor="@color/text2"
+        android:textStyle="bold"
+        android:textSize="25sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="91dp"
-        android:layout_marginTop="218dp"
-        android:id="@+id/textView" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:id="@+id/movietitle2"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/placeholder1"
+        android:layout_below="@+id/movietitle"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="60dp"
+        android:id="@+id/poster"
+        />
+
+    <Button
+        android:text="Next Movie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/poster"
+        android:layout_marginBottom="9dp"
+        android:id="@+id/nextRec"
+        android:background="@color/buttons2"
+        />
+
+    <Button
+        android:text=" Previous Movie "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/prevRec"
+        android:layout_alignBaseline="@+id/nextRec"
+        android:layout_alignBottom="@+id/nextRec"
+        android:layout_alignStart="@+id/poster"
+        android:background="@color/buttons2"
+        />
+
 </RelativeLayout>
