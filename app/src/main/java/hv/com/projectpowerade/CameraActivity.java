@@ -98,6 +98,8 @@ public class CameraActivity extends AppCompatActivity {
     Button next;
     static int i = 0;
 
+    final int MAX = 6;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +111,7 @@ public class CameraActivity extends AppCompatActivity {
         takePictureButton.setVisibility(View.VISIBLE);
         assert takePictureButton != null;
 
-        for(int j = 0; j < 21; j++) {
+        for(int j = 0; j < MAX; j++) {
             reacts.add(0);
         }
 
@@ -167,7 +169,7 @@ public class CameraActivity extends AppCompatActivity {
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(i<21) {
+                if(i<MAX) {
                     takePicture();
                     takePictureButton.setVisibility(View.INVISIBLE);
                 }
