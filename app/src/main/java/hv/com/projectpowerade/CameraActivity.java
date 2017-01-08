@@ -97,7 +97,6 @@ public class CameraActivity extends AppCompatActivity {
     TextView movtitle;
     Button next;
     static int i = 1;
-    static boolean canGoToNext = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,23 +165,9 @@ public class CameraActivity extends AppCompatActivity {
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(i<21 && canGoToNext) {
+                if(i<21) {
                     takePicture();
-                    //API
-                    canGoToNext = false;
-                    //Move on to next image
-                    //i++;
-                    //poster1.setImageResource(array_image.get(i));
-                    //movtitle.setText(titles.get(i));
-                    //Delay
-                    /*final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Do something after 5s = 5000ms
-                            takePictureButton.setVisibility(View.VISIBLE);
-                        }
-                    }, 1000);*/
+                    takePictureButton.setVisibility(View.INVISIBLE);
                 }
                 else{
                     Intent gotoResults = new Intent(CameraActivity.this, ResultsPage.class);
@@ -317,9 +302,10 @@ public class CameraActivity extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-
-                    uploadImage(Uri.fromFile(getCameraFile()));
                     createCameraPreview();
+
+                    Toast.makeText(CameraActivity.this, "Please wait as this processes.", Toast.LENGTH_SHORT).show();
+                    uploadImage(Uri.fromFile(getCameraFile()));
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
@@ -527,10 +513,10 @@ public class CameraActivity extends AppCompatActivity {
             protected void onPostExecute(String result) {
                 // Enable button to go to next poster
                 i++;
-                canGoToNext = true;
+                takePictureButton.setVisibility(View.VISIBLE);
 
                 // Development purposes only
-                Toast.makeText(CameraActivity.this, "You may advance to the next poster now", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CameraActivity.this, "You may continue now.", Toast.LENGTH_SHORT).show();
 
                 poster1.setImageResource(array_image.get(i));
                 movtitle.setText(titles.get(i));
@@ -577,6 +563,8 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             message += "nothing";
         }
+
+        Log.i("API Response", message);
 
         return message;
     }
