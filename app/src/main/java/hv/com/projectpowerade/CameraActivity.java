@@ -96,7 +96,7 @@ public class CameraActivity extends AppCompatActivity {
     ImageView poster1;
     TextView movtitle;
     Button next;
-    static int i = 1;
+    static int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +108,10 @@ public class CameraActivity extends AppCompatActivity {
         takePictureButton = (Button) findViewById(R.id.buttonnext);
         takePictureButton.setVisibility(View.VISIBLE);
         assert takePictureButton != null;
+
+        for(int j = 0; j < 21; j++) {
+            reacts.add(0);
+        }
 
         //place movie titles here yo
         titles.add(getString(R.string.movietitle1));
@@ -132,27 +136,27 @@ public class CameraActivity extends AppCompatActivity {
         titles.add(getString(R.string.movietitle20));
         titles.add(getString(R.string.movietitle21));
 
-        categories.add(new Genre("action-comedy", 28, R.drawable.comedysick));
-        categories.add(new Genre("action-crime", 28, R.drawable.comedysick));
-        categories.add(new Genre("action-thriller", 28, R.drawable.comedysick));
-        categories.add(new Genre("comedy-romance", 35, R.drawable.comedysick));
+        categories.add(new Genre("action-comedy", 28, R.drawable.actioncomedy));
+        categories.add(new Genre("action-crime", 28, R.drawable.actioncrime));
+        categories.add(new Genre("action-thriller", 28, R.drawable.actionthriller));
+        categories.add(new Genre("comedy-romance", 35, R.drawable.comedyromance));
         categories.add(new Genre("comedy-sick", 35, R.drawable.comedysick));
-        categories.add(new Genre("comedy-sports", 35, R.drawable.comedysick));
-        categories.add(new Genre("documentary-biography", 99, R.drawable.comedysick));
-        categories.add(new Genre("documentary-comedy", 99, R.drawable.comedysick));
-        categories.add(new Genre("documentary-history", 99, R.drawable.comedysick));
-        categories.add(new Genre("drama-musical", 18, R.drawable.comedysick));
-        categories.add(new Genre("drama-romance", 18, R.drawable.comedysick));
-        categories.add(new Genre("drama-war", 18, R.drawable.comedysick));
-        categories.add(new Genre("family-adventure", 10751, R.drawable.comedysick));
-        categories.add(new Genre("family-comedy", 10751, R.drawable.comedysick));
-        categories.add(new Genre("family-fantasy", 10751, R.drawable.comedysick));
-        categories.add(new Genre("scifi-animation", 878, R.drawable.comedysick));
-        categories.add(new Genre("scifi-family", 878, R.drawable.comedysick));
-        categories.add(new Genre("scifi-horror", 878, R.drawable.comedysick));
-        categories.add(new Genre("thriller-comedy", 53, R.drawable.comedysick));
-        categories.add(new Genre("thriller-crime", 53, R.drawable.comedysick));
-        categories.add(new Genre("thriller-mystery", 53, R.drawable.comedysick));
+        categories.add(new Genre("comedy-sports", 35, R.drawable.comedysports));
+        categories.add(new Genre("documentary-biography", 99, R.drawable.documentarybiography));
+        categories.add(new Genre("documentary-comedy", 99, R.drawable.documentarycomedy));
+        categories.add(new Genre("documentary-history", 99, R.drawable.documentaryhistory));
+        categories.add(new Genre("drama-musical", 18, R.drawable.dramamusical));
+        categories.add(new Genre("drama-romance", 18, R.drawable.dramaromance));
+        categories.add(new Genre("drama-war", 18, R.drawable.dramawar));
+        categories.add(new Genre("family-adventure", 10751, R.drawable.familyadventure));
+        categories.add(new Genre("family-comedy", 10751, R.drawable.familycomedy));
+        categories.add(new Genre("family-fantasy", 10751, R.drawable.familyfantasy));
+        categories.add(new Genre("scifi-animation", 878, R.drawable.scifianimation));
+        categories.add(new Genre("scifi-family", 878, R.drawable.scififamily));
+        categories.add(new Genre("scifi-horror", 878, R.drawable.scifihorror));
+        categories.add(new Genre("thriller-comedy", 53, R.drawable.thrillercomedy));
+        categories.add(new Genre("thriller-crime", 53, R.drawable.thrillercrime));
+        categories.add(new Genre("thriller-mystery", 53, R.drawable.thrillermystery));
 
         poster1 = (ImageView)findViewById(R.id.poster);
         movtitle = (TextView)findViewById(R.id.movietitle);
@@ -557,12 +561,22 @@ public class CameraActivity extends AppCompatActivity {
                 message += String.format("Blurred: %s\n", face.getBlurredLikelihood());
                 message += String.format("Confidence: %s\n", face.getDetectionConfidence());
                 message += "\n";
+
+                if (face.getJoyLikelihood() == "VERY_LIKELY" || face.getJoyLikelihood() == "LIKELY"
+                        || face.getSurpriseLikelihood() == "VERY_LIKELY" || face.getSurpriseLikelihood() == "LIKELY") {
+                    reacts.set(i, reacts.get(i) + 1);
+                }
             }
         } else {
             message += "nothing";
         }
 
         Log.i("API Response", message);
+        String temp = "";
+        for(int react : reacts) {
+            temp += ((Integer)react).toString();
+        }
+        Log.i("Reacts", temp);
 
         return message;
     }

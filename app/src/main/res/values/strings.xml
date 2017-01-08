@@ -7,24 +7,24 @@
         Please note you must allow camera usage to allow the full effect of this app.</string>
 
     <string name="movietitle1">Deadpool</string>
-    <string name="movietitle2">Big Hero 6</string>
-    <string name="movietitle3">Love Actually</string>
-    <string name="movietitle4">The Jungle Book</string>
-    <string name="movietitle5">Spock</string>
-    <string name="movietitle6">The Phantom of the Opera</string>
-    <string name="movietitle7">Fantastic Beasts</string>
+    <string name="movietitle2">Sherlock Holmes: A Game of Shadows</string>
+    <string name="movietitle3">Furious 7</string>
+    <string name="movietitle4">Love Actually</string>
+    <string name="movietitle5">Hangover Part II</string>
+    <string name="movietitle6">The Longest Yard</string>
+    <string name="movietitle7">Spock</string>
     <string name="movietitle8">What Now?</string>
-    <string name="movietitle9">E.T.</string>
-    <string name="movietitle10">Charlie and the Chocolate Factory</string>
-    <string name="movietitle11">Hangover Part II</string>
-    <string name="movietitle12">The Longest Yard</string>
-    <string name="movietitle13">Korengal</string>
-    <string name="movietitle14">Alien</string>
-    <string name="movietitle15">Sherlock Holmes: A Game of Shadows</string>
-    <string name="movietitle16">Furious 7</string>
-    <string name="movietitle17">Passengers</string>
-    <string name="movietitle18">The Double</string>
-    <string name="movietitle19">Eye in the Sky</string>
+    <string name="movietitle9">Korengal</string>
+    <string name="movietitle10">The Phantom of the Opera</string>
+    <string name="movietitle11">Passengers</string>
+    <string name="movietitle12">Eye in the Sky</string>
+    <string name="movietitle13">The Jungle Book</string>
+    <string name="movietitle14">Charlie and the Chocolate Factory</string>
+    <string name="movietitle15">Fantastic Beasts</string>
+    <string name="movietitle16">Big Hero 6</string>
+    <string name="movietitle17">E.T.</string>
+    <string name="movietitle18">Alien</string>
+    <string name="movietitle19">The Double</string>
     <string name="movietitle20">Don\'t Breathe</string>
     <string name="movietitle21">The Girl on the Train</string>
 
