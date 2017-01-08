@@ -3,7 +3,8 @@
 
     <string name="title">Welcome to Project Powerade!!!</string>
     <string name="welcomemsg">This app helps solve the age old problem of deciding what movie to watch.
-        We use a bunch of API\'s and your reactions to determine which movie you should watch.</string>
+        We used Google\'s Cloud Vision API along with IMDb\'s database to determine which movie you should watch.
+        Please note you must allow camera usage to allow the full effect of this app.</string>
 
     <string name="movietitle1">Deadpool</string>
     <string name="movietitle2">Big Hero 6</string>
@@ -29,4 +30,6 @@
 
     <string name="directorypath">/Android/data/hv.com.projectpowerade/</string>
     <string name="filename">pic.jpg</string>
+
+
 </resources>

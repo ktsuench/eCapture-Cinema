@@ -169,6 +169,8 @@ public class CloudVisionAPI extends AppCompatActivity {
 
             protected void onPostExecute(String result) {
                 // Enable button to go to next poster
+                Intent backtoPoster = new Intent(CloudVisionAPI.this, CameraActivity.class);
+                startActivity(backtoPoster);
             }
         }.execute();
     }

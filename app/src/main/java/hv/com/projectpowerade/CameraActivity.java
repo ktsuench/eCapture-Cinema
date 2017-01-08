@@ -141,18 +141,21 @@ public class CameraActivity extends AppCompatActivity {
 
         poster1.setImageResource(R.drawable.actioncomedy);
         movtitle.setText(getString(R.string.movietitle1));
+
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(i<21) {
                     takePictureButton.setVisibility(View.GONE);
                     takePicture();
+                    //API
+                    Intent gotoCloud = new Intent(CameraActivity.this,CloudVisionAPI.class);
+                    startActivity(gotoCloud);
+                    //Move on to next image
                     poster1.setImageResource(array_image.get(i));
                     movtitle.setText(titles.get(i));
                     i++;
-                    //put API stuff here
-
-
+                    //Delay
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -160,7 +163,7 @@ public class CameraActivity extends AppCompatActivity {
                             // Do something after 5s = 5000ms
                             takePictureButton.setVisibility(View.VISIBLE);
                         }
-                    }, 2000);
+                    }, 1000);
 
                 }
                 else{
@@ -255,6 +258,7 @@ public class CameraActivity extends AppCompatActivity {
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
