@@ -28,7 +28,6 @@
         <activity android:name=".CameraActivity">
 
         </activity>
-        <activity android:name=".CloudVisionAPI" />
     </application>
 
 

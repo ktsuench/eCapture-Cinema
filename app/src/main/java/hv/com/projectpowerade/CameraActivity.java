@@ -89,9 +89,9 @@ public class CameraActivity extends AppCompatActivity {
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
-    ArrayList<Integer> reacts = new ArrayList<Integer>();
-    static ArrayList<Integer> array_image = new ArrayList<Integer>();
-    static ArrayList<String> titles = new ArrayList<String>();
+    ArrayList<Integer> reacts = new ArrayList<>();
+    ArrayList<String> titles = new ArrayList<>();
+    ArrayList<Genre> categories = new ArrayList<>();
 
     ImageView poster1;
     TextView movtitle;
@@ -108,29 +108,6 @@ public class CameraActivity extends AppCompatActivity {
         takePictureButton = (Button) findViewById(R.id.buttonnext);
         takePictureButton.setVisibility(View.VISIBLE);
         assert takePictureButton != null;
-
-
-        array_image.add(R.drawable.actioncomedy);
-        array_image.add(R.drawable.scifianimation);
-        array_image.add(R.drawable.comedyromance);
-        array_image.add(R.drawable.familyadventure);
-        array_image.add(R.drawable.documentarybiography);
-        array_image.add(R.drawable.dramamusical);
-        array_image.add(R.drawable.familyfantasy);
-        array_image.add(R.drawable.documentarycomedy);
-        array_image.add(R.drawable.scififamily);
-        array_image.add(R.drawable.familycomedy);
-        array_image.add(R.drawable.comedysick);
-        array_image.add(R.drawable.comedysports);
-        array_image.add(R.drawable.documentaryhistory);
-        array_image.add(R.drawable.scifihorror);
-        array_image.add(R.drawable.actioncrime);
-        array_image.add(R.drawable.actionthriller);
-        array_image.add(R.drawable.dramaromance);
-        array_image.add(R.drawable.thrillercomedy);
-        array_image.add(R.drawable.dramawar);
-        array_image.add(R.drawable.thrillercrime);
-        array_image.add(R.drawable.thrillermystery);
 
         //place movie titles here yo
         titles.add(getString(R.string.movietitle1));
@@ -155,6 +132,27 @@ public class CameraActivity extends AppCompatActivity {
         titles.add(getString(R.string.movietitle20));
         titles.add(getString(R.string.movietitle21));
 
+        categories.add(new Genre("action-comedy", 28, R.drawable.comedysick));
+        categories.add(new Genre("action-crime", 28, R.drawable.comedysick));
+        categories.add(new Genre("action-thriller", 28, R.drawable.comedysick));
+        categories.add(new Genre("comedy-romance", 35, R.drawable.comedysick));
+        categories.add(new Genre("comedy-sick", 35, R.drawable.comedysick));
+        categories.add(new Genre("comedy-sports", 35, R.drawable.comedysick));
+        categories.add(new Genre("documentary-biography", 99, R.drawable.comedysick));
+        categories.add(new Genre("documentary-comedy", 99, R.drawable.comedysick));
+        categories.add(new Genre("documentary-history", 99, R.drawable.comedysick));
+        categories.add(new Genre("drama-musical", 18, R.drawable.comedysick));
+        categories.add(new Genre("drama-romance", 18, R.drawable.comedysick));
+        categories.add(new Genre("drama-war", 18, R.drawable.comedysick));
+        categories.add(new Genre("family-adventure", 10751, R.drawable.comedysick));
+        categories.add(new Genre("family-comedy", 10751, R.drawable.comedysick));
+        categories.add(new Genre("family-fantasy", 10751, R.drawable.comedysick));
+        categories.add(new Genre("scifi-animation", 878, R.drawable.comedysick));
+        categories.add(new Genre("scifi-family", 878, R.drawable.comedysick));
+        categories.add(new Genre("scifi-horror", 878, R.drawable.comedysick));
+        categories.add(new Genre("thriller-comedy", 53, R.drawable.comedysick));
+        categories.add(new Genre("thriller-crime", 53, R.drawable.comedysick));
+        categories.add(new Genre("thriller-mystery", 53, R.drawable.comedysick));
 
         poster1 = (ImageView)findViewById(R.id.poster);
         movtitle = (TextView)findViewById(R.id.movietitle);
@@ -518,7 +516,7 @@ public class CameraActivity extends AppCompatActivity {
                 // Development purposes only
                 Toast.makeText(CameraActivity.this, "You may continue now.", Toast.LENGTH_SHORT).show();
 
-                poster1.setImageResource(array_image.get(i));
+                poster1.setImageResource(categories.get(i).getImgfile());
                 movtitle.setText(titles.get(i));
             }
         }.execute();
