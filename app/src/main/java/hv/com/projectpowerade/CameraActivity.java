@@ -562,8 +562,8 @@ public class CameraActivity extends AppCompatActivity {
                 message += String.format("Confidence: %s\n", face.getDetectionConfidence());
                 message += "\n";
 
-                if (face.getJoyLikelihood() == "VERY_LIKELY" || face.getJoyLikelihood() == "LIKELY"
-                        || face.getSurpriseLikelihood() == "VERY_LIKELY" || face.getSurpriseLikelihood() == "LIKELY") {
+                if ("VERY_LIKELY".equals(face.getJoyLikelihood()) || "LIKELY".equals(face.getJoyLikelihood())
+                        || "VERY_LIKELY".equals(face.getSurpriseLikelihood()) || "LIKELY".equals(face.getSurpriseLikelihood())) {
                     reacts.set(i, reacts.get(i) + 1);
                 }
             }
