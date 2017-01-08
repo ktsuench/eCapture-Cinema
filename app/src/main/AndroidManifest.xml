@@ -18,6 +18,10 @@
         <activity android:name=".PosterPage">
 
         </activity>
+        <activity android:name=".ResultsPage">
+
+        </activity>
     </application>
+
 
 </manifest>
