@@ -18,7 +18,7 @@ public class FirstPage extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gotoPoster = new Intent(FirstPage.this, PosterPage.class);
+                Intent gotoPoster = new Intent(FirstPage.this, CameraActivity.class);
                 startActivity(gotoPoster);
             }
         });

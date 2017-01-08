@@ -29,10 +29,25 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="60dp"
         android:id="@+id/poster"
         />
 
+    <Button
+        android:text=" Next Poster "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/poster"
+        android:id="@+id/buttonnext"
+        android:background="#061787"
+        />
+    <TextureView
+        android:id="@+id/texture"
+        android:layout_width="1px"
+        android:layout_height="1px"
+        android:layout_alignParentTop="true"
+        />
 
 
 </RelativeLayout>
