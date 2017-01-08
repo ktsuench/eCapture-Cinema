@@ -27,5 +27,6 @@
     <string name="movietitle20">Don\'t Breathe</string>
     <string name="movietitle21">The Girl on the Train</string>
 
-
+    <string name="directorypath">/Android/data/hv.com.projectpowerade/</string>
+    <string name="filename">pic.jpg</string>
 </resources>

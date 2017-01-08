@@ -67,8 +67,11 @@ public class CameraActivity extends AppCompatActivity {
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+
+    ArrayList<Integer> reacts = new ArrayList<Integer>();
     ArrayList<Integer> array_image = new ArrayList<Integer>();
     ArrayList<String> titles = new ArrayList<String>();
+
     ImageView poster1;
     TextView movtitle;
     Button next;
@@ -82,6 +85,7 @@ public class CameraActivity extends AppCompatActivity {
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
         takePictureButton = (Button) findViewById(R.id.buttonnext);
+        takePictureButton.setVisibility(View.VISIBLE);
         assert takePictureButton != null;
 
 
@@ -141,10 +145,23 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(i<21) {
+                    takePictureButton.setVisibility(View.GONE);
                     takePicture();
                     poster1.setImageResource(array_image.get(i));
                     movtitle.setText(titles.get(i));
                     i++;
+                    //put API stuff here
+
+
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Do something after 5s = 5000ms
+                            takePictureButton.setVisibility(View.VISIBLE);
+                        }
+                    }, 2000);
+
                 }
                 else{
                     Intent gotoResults = new Intent(CameraActivity.this, ResultsPage.class);
@@ -193,6 +210,7 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
+            takePictureButton.setVisibility(View.VISIBLE);
             Toast.makeText(CameraActivity.this, "You may advance to the next poster now", Toast.LENGTH_SHORT).show();
             createCameraPreview();
         }
@@ -240,7 +258,7 @@ public class CameraActivity extends AppCompatActivity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File file = new File(Environment.getExternalStorageDirectory()+"/Android/data/com.projects.ken.camera/pic.jpg");
+            final File file = new File(Environment.getExternalStorageDirectory() + "" + R.string.directorypath + R.string.filename);
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
