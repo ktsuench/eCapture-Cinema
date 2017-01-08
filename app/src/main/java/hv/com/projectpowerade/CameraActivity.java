@@ -164,7 +164,6 @@ public class CameraActivity extends AppCompatActivity {
                             takePictureButton.setVisibility(View.VISIBLE);
                         }
                     }, 1000);
-
                 }
                 else{
                     Intent gotoResults = new Intent(CameraActivity.this, ResultsPage.class);
