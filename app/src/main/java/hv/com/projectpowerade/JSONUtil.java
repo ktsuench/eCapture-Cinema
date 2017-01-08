@@ -1,8 +1,12 @@
 package hv.com.projectpowerade;
 
+import android.os.Environment;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import java.util.ArrayList;
 
@@ -12,8 +16,9 @@ import java.util.ArrayList;
 
 public class JSONUtil {
 
-    public static String toJSon(ArrayList<Genre> genres) {
+    public String toJson(ArrayList<Genre> genres) {
         try {
+            String stuff = "";
             JSONArray jsonArray = new JSONArray();
             if(genres != null) {
                 for (Genre g : genres) {
@@ -30,10 +35,10 @@ public class JSONUtil {
                         }
                         genre.put("subCategories", subCategories);
                     }
+                    stuff += genre.toString();
                 }
             }
-
-            return jsonArray.toString();
+            return stuff;
 
         } catch (JSONException ex) {
             ex.printStackTrace();
@@ -41,4 +46,23 @@ public class JSONUtil {
         return null;
 
     }
-}
+    @SuppressWarnings("unchecked")
+    public void writeToFile(ArrayList<Genre> genres) throws IOException {
+/*            JSONObject obj = new JSONObject();
+            obj.put("Name", "crunchify.com");
+            obj.put("Author", "App Shah");
+
+            JSONArray company = new JSONArray();
+            company.add("Compnay: eBay");
+            company.add("Compnay: Paypal");
+            company.add("Compnay: Google");
+            obj.put("Company List", company);
+*/
+            // try-with-resources statement based on post comment below
+            try (FileWriter file = new FileWriter(Environment.getExternalStorageDirectory() + "/Android/data/hv.com.projectpowerade/" + "file1.json")) {
+                file.write(this.toJson(genres));
+                System.out.println("Successfully Copied JSON Object to File...");
+                System.out.println("\nJSON Object: ");
+            }
+        }
+    }

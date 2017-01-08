@@ -524,6 +524,39 @@ public class CameraActivity extends AppCompatActivity {
 
                 poster1.setImageResource(categories.get(i).getImgfile());
                 movtitle.setText(titles.get(i));
+
+                ArrayList<Genre> genres = new ArrayList<>();
+                if (i == MAX){
+                    // This is not logically correct (due to the categories arraylist order)
+                    for (int j = MAX - 1; j > 0; j--) {
+                        if (reacts.get(j) > 0) {
+                            if (j == 0) {
+                                genres.add(new Genre("action", 28, 0));
+                            } else if (j == 1) {
+                                genres.add(new Genre("comedy", 35, 0));
+                            } else if (j == 2) {
+                                genres.add(new Genre("documentary", 99, 0));
+                            } else if (j == 3) {
+                                genres.add(new Genre("drama", 18, 0));
+                            } else if (j == 4) {
+                                genres.add(new Genre("family", 10751, 0));
+                            } else if (j == 5) {
+                                genres.add(new Genre("scifi", 878, 0));
+                            } else if (j == 6) {
+                                genres.add(new Genre("thriller", 53, 0));
+                            }
+                        }
+                    }
+                    JSONUtil jutil = new JSONUtil();
+                    String jsonString = jutil.toJson(genres);
+                    Log.i("JSON Result", jsonString);
+
+                    try {
+                        jutil.writeToFile(genres);
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
             }
         }.execute();
     }
@@ -581,5 +614,10 @@ public class CameraActivity extends AppCompatActivity {
         Log.i("Reacts", temp);
 
         return message;
+
+
+
+
+
     }
 }
