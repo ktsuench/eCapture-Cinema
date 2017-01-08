@@ -14,10 +14,14 @@ import android.widget.TextView;
  */
 
 public class ResultsPage extends AppCompatActivity {
+
     private TextView movietitle2;
     private ImageView poster2;
     private Button nextMov;
     private Button prevMov;
+
+    private String imgPath = "https://image.tmdb.org/t/p/w300_and_h450_bestv2";
+    private String movTitle;
 
 
     @Override
@@ -34,6 +38,8 @@ public class ResultsPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Next movie recommendation here
+                movietitle2.setText(movTitle);
+                poster2.setImageURI((imgPath + imgUrl).toString());
             }
         });
 
@@ -41,6 +47,7 @@ public class ResultsPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Next movie recommendation here
+
             }
         });
 
