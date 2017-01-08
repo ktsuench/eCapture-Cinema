@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -17,10 +18,13 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +38,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.vision.v1.Vision;
+import com.google.api.services.vision.v1.VisionRequestInitializer;
+import com.google.api.services.vision.v1.model.AnnotateImageRequest;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.FaceAnnotation;
+import com.google.api.services.vision.v1.model.Feature;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -45,6 +64,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
+    private static final String CLOUD_VISION_API_KEY = "AIzaSyBGkYyoMJtfhh-gdGuPnoA56AasJjms3LM";
+
     private static final String TAG = "MainActivity";
     private Button takePictureButton;
     private TextureView textureView;
@@ -69,13 +90,14 @@ public class CameraActivity extends AppCompatActivity {
     private HandlerThread mBackgroundThread;
 
     ArrayList<Integer> reacts = new ArrayList<Integer>();
-    ArrayList<Integer> array_image = new ArrayList<Integer>();
-    ArrayList<String> titles = new ArrayList<String>();
+    static ArrayList<Integer> array_image = new ArrayList<Integer>();
+    static ArrayList<String> titles = new ArrayList<String>();
 
     ImageView poster1;
     TextView movtitle;
     Button next;
     static int i = 1;
+    static boolean canGoToNext = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +159,6 @@ public class CameraActivity extends AppCompatActivity {
 
         poster1 = (ImageView)findViewById(R.id.poster);
         movtitle = (TextView)findViewById(R.id.movietitle);
-        next = (Button)findViewById(R.id.buttonnext);
 
         poster1.setImageResource(R.drawable.actioncomedy);
         movtitle.setText(getString(R.string.movietitle1));
@@ -145,25 +166,23 @@ public class CameraActivity extends AppCompatActivity {
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(i<21) {
-                    takePictureButton.setVisibility(View.GONE);
+                if(i<21 && canGoToNext) {
                     takePicture();
                     //API
-                    Intent gotoCloud = new Intent(CameraActivity.this,CloudVisionAPI.class);
-                    startActivity(gotoCloud);
+                    canGoToNext = false;
                     //Move on to next image
-                    poster1.setImageResource(array_image.get(i));
-                    movtitle.setText(titles.get(i));
-                    i++;
+                    //i++;
+                    //poster1.setImageResource(array_image.get(i));
+                    //movtitle.setText(titles.get(i));
                     //Delay
-                    final Handler handler = new Handler();
+                    /*final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             // Do something after 5s = 5000ms
                             takePictureButton.setVisibility(View.VISIBLE);
                         }
-                    }, 1000);
+                    }, 1000);*/
                 }
                 else{
                     Intent gotoResults = new Intent(CameraActivity.this, ResultsPage.class);
@@ -212,8 +231,6 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
-            takePictureButton.setVisibility(View.VISIBLE);
-            Toast.makeText(CameraActivity.this, "You may advance to the next poster now", Toast.LENGTH_SHORT).show();
             createCameraPreview();
         }
     };
@@ -261,7 +278,8 @@ public class CameraActivity extends AppCompatActivity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File file = new File(Environment.getExternalStorageDirectory() + "" + R.string.directorypath + R.string.filename);
+            final File file = new File(Environment.getExternalStorageDirectory() + getString(R.string.directorypath) + getString(R.string.filename));
+            Log.i(TAG, file.getAbsolutePath());
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -299,7 +317,8 @@ public class CameraActivity extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(CameraActivity.this, "You may advance to the next poster now", Toast.LENGTH_SHORT).show();
+
+                    uploadImage(Uri.fromFile(getCameraFile()));
                     createCameraPreview();
                 }
             };
@@ -413,8 +432,152 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         Log.e(TAG, "onPause");
-        //closeCamera();
+        closeCamera();
         stopBackgroundThread();
         super.onPause();
+    }
+
+    public File getCameraFile() {
+        File dir = Environment.getExternalStoragePublicDirectory(getString(R.string.directorypath));
+        return new File(dir, getString(R.string.filename));
+    }
+
+    public void uploadImage(Uri uri) {
+        if (uri != null) {
+            try {
+                // scale the image to save on bandwidth
+                Bitmap bitmap =
+                        scaleBitmapDown(
+                                MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
+                                1200);
+
+                callCloudVision(bitmap);
+
+            } catch (IOException e) {
+                Log.d(TAG, "Image picking failed because " + e.getMessage());
+                Toast.makeText(this, "Google Cloud Vision Failed due to faulty image data", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Log.d(TAG, "Image picker gave us a null image.");
+            Toast.makeText(this, "Google Cloud Vision Failed due to no image data provided", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void callCloudVision(final Bitmap bitmap) throws IOException {
+        // Do the real work in an async task, because we need to use the network anyway
+        new AsyncTask<Object, Void, String>() {
+            @Override
+            protected String doInBackground(Object... params) {
+                try {
+                    HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+                    JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+
+                    Vision.Builder builder = new Vision.Builder(httpTransport, jsonFactory, null);
+                    builder.setVisionRequestInitializer(new
+                            VisionRequestInitializer(CLOUD_VISION_API_KEY));
+                    Vision vision = builder.build();
+
+                    BatchAnnotateImagesRequest batchAnnotateImagesRequest =
+                            new BatchAnnotateImagesRequest();
+                    batchAnnotateImagesRequest.setRequests(new ArrayList<AnnotateImageRequest>() {{
+                        AnnotateImageRequest annotateImageRequest = new AnnotateImageRequest();
+
+                        // Add the image
+                        com.google.api.services.vision.v1.model.Image base64EncodedImage = new com.google.api.services.vision.v1.model.Image();
+                        // Convert the bitmap to a JPEG
+                        // Just in case it's a format that Android understands but Cloud Vision
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream);
+                        byte[] imageBytes = byteArrayOutputStream.toByteArray();
+
+                        // Base64 encode the JPEG
+                        base64EncodedImage.encodeContent(imageBytes);
+                        annotateImageRequest.setImage(base64EncodedImage);
+
+                        // add the features we want
+                        annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
+                            Feature faceDetection = new Feature();
+                            faceDetection.setType("FACE_DETECTION");
+                            faceDetection.setMaxResults(10);
+                            add(faceDetection);
+                        }});
+
+                        // Add the list of one thing to the request
+                        add(annotateImageRequest);
+                    }});
+
+                    Vision.Images.Annotate annotateRequest =
+                            vision.images().annotate(batchAnnotateImagesRequest);
+                    // Due to a bug: requests to Vision API containing large images fail when GZipped.
+                    annotateRequest.setDisableGZipContent(true);
+                    Log.d(TAG, "created Cloud Vision request object, sending request");
+
+                    BatchAnnotateImagesResponse response = annotateRequest.execute();
+                    return getFaceAnnotations(response);
+
+                } catch (GoogleJsonResponseException e) {
+                    Log.d(TAG, "failed to make API request because " + e.getContent());
+                } catch (IOException e) {
+                    Log.d(TAG, "failed to make API request because of other IOException " +
+                            e.getMessage());
+                }
+                return "Cloud Vision API request failed. Check logs for details.";
+            }
+
+            protected void onPostExecute(String result) {
+                // Enable button to go to next poster
+                i++;
+                canGoToNext = true;
+
+                // Development purposes only
+                Toast.makeText(CameraActivity.this, "You may advance to the next poster now", Toast.LENGTH_SHORT).show();
+
+                poster1.setImageResource(array_image.get(i));
+                movtitle.setText(titles.get(i));
+            }
+        }.execute();
+    }
+
+    public Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
+
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+        int resizedWidth = maxDimension;
+        int resizedHeight = maxDimension;
+
+        if (originalHeight > originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = (int) (resizedHeight * (float) originalWidth / (float) originalHeight);
+        } else if (originalWidth > originalHeight) {
+            resizedWidth = maxDimension;
+            resizedHeight = (int) (resizedWidth * (float) originalHeight / (float) originalWidth);
+        } else if (originalHeight == originalWidth) {
+            resizedHeight = maxDimension;
+            resizedWidth = maxDimension;
+        }
+        return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+    }
+
+    private String getFaceAnnotations(BatchAnnotateImagesResponse response) {
+        String message = "I found these things:\n\n";
+
+        List<FaceAnnotation> faces = response.getResponses().get(0).getFaceAnnotations();
+        if (faces != null) {
+            for (FaceAnnotation face : faces) {
+                message += String.format("Anger: %s\n", face.getAngerLikelihood());
+                message += String.format("Joy: %s\n", face.getJoyLikelihood());
+                message += String.format("Sorrow: %s\n", face.getSorrowLikelihood());
+                message += String.format("Surprise: %s\n", face.getSurpriseLikelihood());
+                message += String.format("Headwear: %s\n", face.getHeadwearLikelihood());
+                message += String.format("Exposed: %s\n", face.getUnderExposedLikelihood());
+                message += String.format("Blurred: %s\n", face.getBlurredLikelihood());
+                message += String.format("Confidence: %s\n", face.getDetectionConfidence());
+                message += "\n";
+            }
+        } else {
+            message += "nothing";
+        }
+
+        return message;
     }
 }
